@@ -1,0 +1,6 @@
+*.csv
+*.pdf
+*.png
+*.jpg
+*.epf
+random_sampling/*.csv
