@@ -3,6 +3,7 @@
 *.png
 *.jpg
 *.epf
+*.json
 random_sampling/*.csv
 dataset_preparation/feature_extraction/boxplot_4_feat/
 dataset_preparation/feature_extraction/eda_multiplescatter/
@@ -11,3 +12,10 @@ dataset_preparation/feature_extraction/VT_lim/
 dataset_preparation/feature_extraction/*.csv
 dataset_preparation/feature_extraction/*.pdf 
 dataset_preparation/feature_extraction/*.png
+dataset_preparation/merge_csv/merge/
+dataset_preparation/merge_csv/*.csv
+dataset_preparation/scripts_avro/folder_intersect_202000109/
+dataset_preparation/scripts_avro/OI_folder/
+dataset_preparation/scripts_avro/OI_tar/
+dataset_preparation/scripts_avro/*.json
+dataset_preparation/scripts_avro/*.csv
