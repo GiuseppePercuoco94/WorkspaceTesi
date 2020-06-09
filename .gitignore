@@ -4,3 +4,10 @@
 *.jpg
 *.epf
 random_sampling/*.csv
+dataset_preparation/feature_extraction/boxplot_4_feat/
+dataset_preparation/feature_extraction/eda_multiplescatter/
+dataset_preparation/feature_extraction/Investigate/
+dataset_preparation/feature_extraction/VT_lim/
+dataset_preparation/feature_extraction/*.csv
+dataset_preparation/feature_extraction/*.pdf 
+dataset_preparation/feature_extraction/*.png
