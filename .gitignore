@@ -26,3 +26,4 @@ clustering/anal_clusters/VT_*/
 clustering/dbscan/dbscan_*/
 clustering/dbscan/img_loop_statdbscan/
 clustering/dbscan/knn/
+clustering/kmeans/kmeans_*/
