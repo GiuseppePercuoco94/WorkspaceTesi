@@ -27,3 +27,6 @@ clustering/dbscan/dbscan_*/
 clustering/dbscan/img_loop_statdbscan/
 clustering/dbscan/knn/
 clustering/kmeans/kmeans_*/
+clustering/pca/pca_*/
+clustering/pca/img/
+clustering/pca/dbscan_*/
