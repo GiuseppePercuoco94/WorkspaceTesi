@@ -19,3 +19,4 @@ dataset_preparation/scripts_avro/OI_folder/
 dataset_preparation/scripts_avro/OI_tar/
 dataset_preparation/scripts_avro/*.json
 dataset_preparation/scripts_avro/*.csv
+dataset_preparation/scripts_vt/*.csv
