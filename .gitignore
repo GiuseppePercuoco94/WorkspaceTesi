@@ -23,3 +23,6 @@ dataset_preparation/scripts_vt/*.csv
 clustering/anal_clusters/centroid/
 clustering/anal_clusters/investigate/
 clustering/anal_clusters/VT_*/
+clustering/dbscan/dbscan_*/
+clustering/dbscan/img_loop_statdbscan/
+clustering/dbscan/knn/
