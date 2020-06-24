@@ -30,7 +30,7 @@ def file_exists(name_file):
         print('no old ',name_file,' exists')
         
 
-def multi_kmeans(csv_in, n_cluster, scale):
+def multi_kmeans(csv_in, n_cluster, scale, top_scale):
     '''
     ARGS:
         -csv_in: csv of features
@@ -46,7 +46,15 @@ def multi_kmeans(csv_in, n_cluster, scale):
     df_copy.reset_index(drop=True, inplace=True)
     #print('Copy: ')
     #print(df_copy)
-    df = df.drop(['score','label'], axis=1)
+    if 'score' in list(df.columns):
+        df = df.drop(['score'], axis=1)
+    else:
+        print('no score label')
+    if 'label' in list(df.columns):
+        df = df.drop(['label'], axis=1)
+    else:
+        print('no label')
+    #df = df.drop(['score','label'], axis=1)
     columns = list(df.columns)
     
     if scale == 1:
@@ -54,25 +62,28 @@ def multi_kmeans(csv_in, n_cluster, scale):
         scaler = StandardScaler()
         print('Scaling with StandardScaler..')
         #df = scaler.fit_transform(df)
-        '''
-        for col in columns:
-            df[col] = scaler.fit_transform(df[[col]])
-            
-        '''
-        for col in columns:
-            if col == 'A_top_country' or col == 'AAAA_top_country':
-                print(col)
-            else:
-                df[col] = scaler.fit_transform(df[[col]])   
+        if top_scale == 1:
+            for col in columns:
+                df[col] = scaler.fit_transform(df[[col]]) 
+        else:
+            for col in columns:
+                if col == 'A_top_country' or col == 'AAAA_top_country':
+                    print(col)
+                else:
+                    df[col] = scaler.fit_transform(df[[col]])   
         
     elif scale == 2:
         scaler = MinMaxScaler()
         print('Scaling with MinMax..')
-        for col in columns:
-            if col == 'A_top_country' or col == 'AAAA_top_country':
-                print(col)
-            else:
-                df[col] = scaler.fit_transform(df[[col]])
+        if top_scale == 1:
+            for col in columns:
+                df[col] = scaler.fit_transform(df[[col]]) 
+        else:
+            for col in columns:
+                if col == 'A_top_country' or col == 'AAAA_top_country':
+                    print(col)
+                else:
+                    df[col] = scaler.fit_transform(df[[col]]) 
     else:
         print('No scaling')
         
@@ -109,8 +120,11 @@ def multi_kmeans(csv_in, n_cluster, scale):
     file_exists(file_out_kmeans_csv)
     
     #df['AAAA_top_country'] = df_copy.loc[:,'AAAA_top_country'].values
+    
     #df['A_top_country'] = df_copy.loc[:,'A_top_country'].values
-    df['label'] = df_copy.loc[:,'label'].values
+    
+    if 'label' in list(df.columns):
+        df['label'] = df_copy.loc[:,'label'].values
     
     df.to_csv(file_out_kmeans_not_sorted)
     
@@ -119,7 +133,9 @@ def multi_kmeans(csv_in, n_cluster, scale):
     df_order.to_csv(file_out_kmeans_csv)
     del df_order
     gc.collect()
-    df = df.drop(['label'], axis=1)
+    
+    if 'label' in list(df.columns):
+        df = df.drop(['label'], axis=1)
     
     
     
@@ -458,7 +474,10 @@ def main():
     #sil_pair = int(sys.argv[5])
     # 1 loop over min ot max number of cluster, other values need to analyse 
     loop = int(sys.argv[5])
-    
+    #top_scale: 1, during the scaling we also consider A/AAAA_top_country
+    top_scale = int(sys.argv[6])
+    #save_fig: 1 we save fig 
+    save_fig = int(sys.argv[7])
     good = []
     bad = []
     mixed = []
@@ -470,20 +489,21 @@ def main():
         start = datetime.now()
         for i in r:
             data_ = []
-            df_,sse,sil,deb = multi_kmeans(path_csv,i,scale)
-            data_ = analyse_clusters(i)
-            good.append(data_[0])
-            bad.append(data_[1])
-            mixed.append(data_[2])
-            comb_pair_2feat(df_,loop)
-            plt.close('all')
-            pair_plot_multi_kmeans(df_,loop)
-            silh_plot(df_,loop)
+            df_,sse,sil,deb = multi_kmeans(path_csv,i,scale,top_scale)
+            if save_fig == 1:
+                data_ = analyse_clusters(i)
+                good.append(data_[0])
+                bad.append(data_[1])
+                mixed.append(data_[2])
+                comb_pair_2feat(df_,loop)
+                plt.close('all')
+                pair_plot_multi_kmeans(df_,loop)
+                silh_plot(df_,loop)
             sse_.append(sse)
             sil_avgs_.append(sil)
             db_index_.append(deb)
             gc.collect()
-        plot_stat_bm(good,bad,mixed,r)
+        #plot_stat_bm(good,bad,mixed,r)
         sse_avgsil_db_index_plot(sse_,sil_avgs_,db_index_,n_min,n_max)
         end = datetime.now()
         print('Duration: {}'.format(end - start))
