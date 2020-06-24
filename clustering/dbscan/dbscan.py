@@ -29,7 +29,7 @@ def file_exists(name_file):
         print('no old ',name_file,' exists')
         
 
-def dbscan_mf(csv_in,metric, e, ms,scale):
+def dbscan_mf(csv_in,metric, e, ms,scale, scale_top):
     """
     ARGS:
         csv_in: csv of features
@@ -39,9 +39,12 @@ def dbscan_mf(csv_in,metric, e, ms,scale):
     """
     #load the csv in the data frame
     df = pd.read_csv(csv_in, low_memory=False, sep=',', index_col=['domain'])
-    #remove the 'score' column
+    
+    #remove the 'score' and 'label' column
     if 'score' in list(df.columns):
         df = df.drop(['score'], axis=1)
+    if 'label' in list(df.columns):
+        df = df.drop(['label'], axis=1)
     #remove NaN values filling with 0 values
     df = df.fillna(0)
     #drop domains which not bring information from OpenIntel
@@ -52,11 +55,12 @@ def dbscan_mf(csv_in,metric, e, ms,scale):
         print('Standard Scaler..')
         columns = list(df.columns)
         col_scale = list(df.columns)
-        '''
-        col_scale.remove('A_top_country')
-        col_scale.remove('AAAA_top_country')
-        '''
-        col_scale.remove('label')
+        if scale_top == 0:
+            col_scale.remove('A_top_country')
+            col_scale.remove('AAAA_top_country')
+            print('SCALE WITHOUT TOP COUNTRY A AAAA')
+        
+        #col_scale.remove('label')
         scaler = StandardScaler()
         for col in col_scale:
             df[col] = scaler.fit_transform(df[[col]])
@@ -75,11 +79,11 @@ def dbscan_mf(csv_in,metric, e, ms,scale):
         columns = list(df.columns)
         
         col_scale = list(df.columns)
-        '''
-        col_scale.remove('A_top_country')
-        col_scale.remove('AAAA_top_country')
-        '''
-        col_scale.remove('label')
+        if scale_top == 0:
+            col_scale.remove('A_top_country')
+            col_scale.remove('AAAA_top_country')
+            print('SCALE WITHOUT TOP COUNTRY A AAAA')
+        #col_scale.remove('label')
         
         scaler = MinMaxScaler()
         #print(col_scale)
@@ -96,15 +100,15 @@ def dbscan_mf(csv_in,metric, e, ms,scale):
     #create DBscan class 
     db = DBSCAN(eps=e,min_samples=ms,metric=metric)
     #obtain cluster labels applying  dbscan only on column features -> ':-1' beacuse we won't consider 'label' column 
-    y_db = db.fit_predict(df[columns[:-1]])
+    y_db = db.fit_predict(df)
     #another way to retrieve cluster labels
     labels_ = db.labels_
     
     '''
     Calc silhouette and davies-bouldin
     '''
-    sil = silhouette_score(df[columns[:-1]],labels_, metric='euclidean')
-    deboul = davies_bouldin_score(df[columns[:-1]],labels_)
+    sil = silhouette_score(df,labels_, metric='euclidean')
+    deboul = davies_bouldin_score(df,labels_)
     #print('labels: ')
     #print(labels_)
     print('len labels: '+ str(len(labels_)))
@@ -415,7 +419,14 @@ def comb_pair_2feat(csv_df_in,nmin,eps,loop):
         else:
             print('Finish scatter comb 2feat')
     
-    
+
+def save_list_to_file(name_file,list,minc,eps):
+    folder_exists('lists_score')
+    path = os.path.join('lists_score',name_file+'.txt')
+    with open(path,mode='a') as f:
+        f.write('['+str(minc)+'_'+str(eps)+'] \n')
+        for x in list:
+            f.write(str(x) + '\n')
 
 def main_loop():
     #csv obtained from concatenation of featrues csv (obtained from OI) and the csv of 'label' obtained from VT or Investigate
@@ -430,6 +441,8 @@ def main_loop():
     max_min_clust = int(sys.argv[5])
     #1: standardScaler, 2: MinMax scaler, other :no scaler
     scale = int(sys.argv[6])
+    #scale_top = 0 -> scalign without A/AAAA_top_country column
+    scale_top = int(sys.argv[7])
     
     range_eps = np.arange(0.1,max_eps,0.1)
     range_min_clust = range(min_min_clust, max_min_clust +1)
@@ -452,33 +465,41 @@ def main_loop():
         db_ = []
         for j in range_eps:
             data_ = []
-            csv_dbscn,nc,sil,deb = dbscan_mf(csv_feat,metric,j,i,scale)
+            csv_dbscn,nc,sil,deb = dbscan_mf(csv_feat,metric,j,i,scale,scale_top)
             
             clus_.append(nc)
+            '''
             data_ = analyse_clusters(csv_dbscn)
             print(data_)
             good_.append(data_[0])
             bad_.append(data_[1])
             mixed_.append(data_[2])
+            '''
             sil_.append(sil)
             db_.append(deb)
+            '''
             comb_pair_2feat(csv_dbscn,i,j,1)
             #pair_plot(csv_dbscn,1,i,j)
             plt.close('all')
-            
+            '''
             gc.collect()
-         
+        
         print('param sil deb')
         print(sil_)
         print(db_)
+        save_list_to_file('sil',sil_,i,j)
+        save_list_to_file('db',db_,i,j)
+        '''
         plot_stat_bm(good_,bad_,mixed_,range_eps,i,clus_)
+        '''
         plot_stat_silh_db(range_eps,i,sil_,db_)
+        gc.collect()
         #info_to_plot_.append(data_)
         #n_clusters.append(clus_)
-        end = datetime.now()
-        print('Duration: {}'.format(end - start))
-        os.system("say 'your program is finish hey hey hey hey'")
-        gc.collect()
+    end = datetime.now()
+    print('Duration: {}'.format(end - start))
+    os.system("say 'your program is finish hey hey hey hey'")
+    gc.collect()
         
     #print(info_to_plot_)
     #print(n_clusters)
