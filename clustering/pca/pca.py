@@ -34,7 +34,7 @@ def gen_pcx_string(n):
     return column_names_
 
 
-def pca(csv_feat, ncomponents, flag_scale, name):
+def pca(csv_feat, ncomponents, flag_scale, name,plot):
     df = pd.read_csv(csv_feat, low_memory=False, sep=',', index_col=['domain'])
     
     #df_copy = pd.read_csv(csv_feat, low_memory=False, sep=',')
@@ -115,12 +115,14 @@ def pca(csv_feat, ncomponents, flag_scale, name):
     print('Explained variance for n '+str(ncomponents)+' components: ')
     print(pca.explained_variance_ratio_)
     
-    if ncomponents == 2:
+    if ncomponents == 2 and plot:
         plot_pca(pca_df)
-    elif ncomponents == 3:
+    elif ncomponents == 3 and plot:
         plot3d_3pc(pca_df)
-    else:
+    elif plot:
         plot_bar_pca(pca,colname)
+    else:
+        print('FINISH')
 
 def plot3d_3pc(pca_in):
     
