@@ -34,8 +34,10 @@ def gen_pcx_string(n):
     return column_names_
 
 
-def pca(csv_feat, ncomponents, flag_scale, name,plot):
-    df = pd.read_csv(csv_feat, low_memory=False, sep=',', index_col=['domain'])
+def pca(csv_feat, ncomponents, flag_scale, name,plot,save,top_scale):
+    df = pd.read_csv(csv_feat, low_memory=False, sep=',')
+    df = df.drop_duplicates(subset='domain')
+    df = df.set_index('domain')
     
     #df_copy = pd.read_csv(csv_feat, low_memory=False, sep=',')
     columns = list(df.columns)
@@ -49,8 +51,10 @@ def pca(csv_feat, ncomponents, flag_scale, name,plot):
     #print(df_copy_2)
     df_copy.reset_index(drop=True, inplace=True)
     #print('Copy: ')
-    
-    df = df.drop(['score','label'], axis=1)
+    score_label = False
+    if 'score' in list(df.columns) and 'label' in list(df.columns):
+        df = df.drop(['score','label'], axis=1)
+        score_label = False
     columns = list(df.columns)
     #index_df = pd.DataFrame({'domain':list(df.index.values)}).
     #index_df = list(df.index.values)
@@ -65,20 +69,30 @@ def pca(csv_feat, ncomponents, flag_scale, name,plot):
     if flag_scale == 1:
         #Scaling
         scaler = StandardScaler()
-        scaler.fit(df)
-        df = scaler.transform(df)
-        print('StandardScaler..')
-        print(df)
+        print('STANDARD SCALER')
+        if top_scale == 1:
+            for col in columns:
+                print('Include TOP')
+                df[col] = scaler.fit_transform(df[[col]]) 
+        else:
+            for col in columns:
+                if col == 'A_top_country' or col == 'AAAA_top_country':
+                    print(col)
+                else:
+                    df[col] = scaler.fit_transform(df[[col]])
     elif flag_scale == 2:
+        print('MINMAX SCALER')
         scaler = MinMaxScaler()
-        scaler.fit(df)
-        df = scaler.transform(df)
-        print('MinMaxScaler..')
-        print("***** VAR AFTER MINMAX SCALER ********")
-        var_calc(df)
-        print("***** COR  HEATMAP AFTER MINMAX SCALER ********")
-        mm_scaler_df = pd.DataFrame(data=df,columns=columns)
-        corr_matrix(mm_scaler_df,'CORR MATRIX AFTER MINMAX SCALER')
+        if top_scale == 1:
+            for col in columns:
+                print('Include TOP')
+                df[col] = scaler.fit_transform(df[[col]]) 
+        else:
+            for col in columns:
+                if col == 'A_top_country' or col == 'AAAA_top_country':
+                    print(col)
+                else:
+                    df[col] = scaler.fit_transform(df[[col]])
     else:
         print('No scale..')
         
@@ -102,14 +116,16 @@ def pca(csv_feat, ncomponents, flag_scale, name,plot):
     '''
     
     #add column of label 
-    pca_df = pd.concat([pca_df,df_copy[['score','label']]], axis=1)
+    if score_label:
+        pca_df = pd.concat([pca_df,df_copy[['score','label']]], axis=1)
     pca_df['domain'] = df_copy_2['domain']
     pca_df = pca_df.set_index(['domain'])
     #print(pca_df)
     
-    folder_exists('pca_csv')
-    path_to_save = os.path.join('pca_csv',name)
-    pca_df.to_csv(path_to_save)
+    if save == 1:
+        folder_exists('pca_csv')
+        path_to_save = os.path.join('pca_csv',name+'.csv')
+        pca_df.to_csv(path_to_save)
     
     #explained variance..
     print('Explained variance for n '+str(ncomponents)+' components: ')
@@ -225,11 +241,20 @@ def corr_matrix(df_in, title):
         
     
 def main():
+    #feature set
     csv_in = sys.argv[1]
+    #number of pca's components
     components = int(sys.argv[2])
+    #1-> standard scaler, 2->minmax scaler, other-> no scaler
     scale = int(sys.argv[3])
+    #name of csv_out
     name = sys.argv[4]
-    pca(csv_in,components,scale,name)
+
+    plotting = int(sys.argv[5])
+    saving = int(sys.argv[6])
+    #top_scale 1-> include A/AAAA in scaling, 0 not include in the scaling
+    top_scale = int(sys.argv[7])
+    pca(csv_in,components,scale,name,plotting,saving,top_scale)
     
 
 if __name__ == '__main__':
