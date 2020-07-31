@@ -38,18 +38,23 @@ def dbscan_mf(csv_in,metric, e, ms,scale, scale_top):
         scale: 
     """
     #load the csv in the data frame
-    df = pd.read_csv(csv_in, low_memory=False, sep=',', index_col=['domain'])
+    df = pd.read_csv(csv_in, low_memory=False, sep=',',index_col=['domain'])
+    
     
     #remove the 'score' and 'label' column
     if 'score' in list(df.columns):
         df = df.drop(['score'], axis=1)
     if 'label' in list(df.columns):
         df = df.drop(['label'], axis=1)
-    #remove NaN values filling with 0 values
-    df = df.fillna(0)
-    #drop domains which not bring information from OpenIntel
-    df = df[(df['A_n_ipv4'] != 0) | (df['AAAA_n_ipv6'] != 0)]
-    #print(df)
+
+    if 'PC1' not in list(df.columns):
+        #remove NaN values filling with 0 values
+        df = df.fillna(0)
+        #drop domains which not bring information from OpenIntel
+        df = df[(df['A_n_ipv4'] != 0) | (df['AAAA_n_ipv6'] != 0)]
+    
+   
+    print(df)
     
     if scale == 1:
         print('Standard Scaler..')
@@ -103,19 +108,24 @@ def dbscan_mf(csv_in,metric, e, ms,scale, scale_top):
     y_db = db.fit_predict(df)
     #another way to retrieve cluster labels
     labels_ = db.labels_
-    
-    '''
-    Calc silhouette and davies-bouldin
-    '''
-    sil = silhouette_score(df,labels_, metric='euclidean')
-    deboul = davies_bouldin_score(df,labels_)
-    #print('labels: ')
-    #print(labels_)
     print('len labels: '+ str(len(labels_)))
     n_clusters_ = len(set(labels_)) - (1 if -1 in labels_ else 0)
     n_noise_ = list(labels_).count(-1)   
     print('Estimated number of clusters: %d' % n_clusters_)
     print('Estimated number of noise points: %d' % n_noise_)
+    '''
+    Calc silhouette and davies-bouldin
+    '''
+    if n_clusters_ == 1 :
+        #valori outlier per capire che non posso calcolare il sil.. outlier perche il sil è un valore compreso tra -1 e 1 e invece db è smepre >= 0
+        sil = 1.5
+        deboul = -1
+    else:
+        sil = silhouette_score(df,labels_, metric='euclidean')
+        deboul = davies_bouldin_score(df,labels_)
+    #print('labels: ')
+    #print(labels_)
+    
     df['cluster'] = labels_
     #print(df)
     eround = round(e,3)
@@ -140,7 +150,6 @@ def dbscan_mf(csv_in,metric, e, ms,scale, scale_top):
     
     
     #del df_out
-    del df
     gc.collect()
     
     return path_csv_out,n_clusters_,sil,deboul
@@ -443,70 +452,78 @@ def main_loop():
     scale = int(sys.argv[6])
     #scale_top = 0 -> scalign without A/AAAA_top_country column
     scale_top = int(sys.argv[7])
+    #save_fig: 1 save fig 
+    save_fig = int(sys.argv[8])
     
-    range_eps = np.arange(0.1,max_eps,0.1)
-    range_min_clust = range(min_min_clust, max_min_clust +1)
+    loop = int(sys.argv[9])
     
-    print(range_eps)
-    print(range_min_clust)
-    
-    info_to_plot_ =[]
-    n_clusters = []
-    #sub_s_name_stat = '[0.1_'+str(max_eps)+''
-    folder_exists('img_loop_statdbscan')
-    
-    start = datetime.now()
-    for i in range_min_clust:
-        good_ = []
-        bad_ = []
-        mixed_ = []
-        clus_= []
-        sil_ = []
-        db_ = []
-        for j in range_eps:
-            data_ = []
-            csv_dbscn,nc,sil,deb = dbscan_mf(csv_feat,metric,j,i,scale,scale_top)
+    if loop == 1:
+        range_eps = np.arange(0.1,max_eps,0.1)
+        range_min_clust = range(min_min_clust, max_min_clust +1)
+        
+        print(range_eps)
+        print(range_min_clust)
+        
+        info_to_plot_ =[]
+        n_clusters = []
+        #sub_s_name_stat = '[0.1_'+str(max_eps)+''
+        folder_exists('img_loop_statdbscan')
+        
+        start = datetime.now()
+        for i in range_min_clust:
+            good_ = []
+            bad_ = []
+            mixed_ = []
+            clus_= []
+            sil_ = []
+            db_ = []
+            for j in range_eps:
+                data_ = []
+                csv_dbscn,nc,sil,deb = dbscan_mf(csv_feat,metric,j,i,scale,scale_top)
+                
+                clus_.append(nc)
+                if save_fig == 1:
+                    
+                    data_ = analyse_clusters(csv_dbscn)
+                    print(data_)
+                    good_.append(data_[0])
+                    bad_.append(data_[1])
+                    mixed_.append(data_[2])
+                    comb_pair_2feat(csv_dbscn,i,j,1)
+                    pair_plot(csv_dbscn,1,i,j)
+                    plt.close('all')
+                    
+                sil_.append(sil)
+                db_.append(deb)
+                
+                gc.collect()
             
-            clus_.append(nc)
-            '''
-            data_ = analyse_clusters(csv_dbscn)
-            print(data_)
-            good_.append(data_[0])
-            bad_.append(data_[1])
-            mixed_.append(data_[2])
-            '''
-            sil_.append(sil)
-            db_.append(deb)
-            '''
-            comb_pair_2feat(csv_dbscn,i,j,1)
-            #pair_plot(csv_dbscn,1,i,j)
-            plt.close('all')
-            '''
+            print('param sil deb')
+            print(sil_)
+            print(db_)
+            save_list_to_file('sil',sil_,i,j)
+            save_list_to_file('db',db_,i,j)
+            if save_fig == 1:
+                plot_stat_bm(good_,bad_,mixed_,range_eps,i,clus_)
+                
+            plot_stat_silh_db(range_eps,i,sil_,db_)
             gc.collect()
-        
-        print('param sil deb')
-        print(sil_)
-        print(db_)
-        save_list_to_file('sil',sil_,i,j)
-        save_list_to_file('db',db_,i,j)
-        '''
-        plot_stat_bm(good_,bad_,mixed_,range_eps,i,clus_)
-        '''
-        plot_stat_silh_db(range_eps,i,sil_,db_)
+            #info_to_plot_.append(data_)
+            #n_clusters.append(clus_)
+        end = datetime.now()
+        print('Duration: {}'.format(end - start))
+        os.system("say 'your program is finish hey hey hey hey'")
         gc.collect()
-        #info_to_plot_.append(data_)
-        #n_clusters.append(clus_)
-    end = datetime.now()
-    print('Duration: {}'.format(end - start))
-    os.system("say 'your program is finish hey hey hey hey'")
-    gc.collect()
+            
+        #print(info_to_plot_)
+        #print(n_clusters)
         
-    #print(info_to_plot_)
-    #print(n_clusters)
-    
-    #plot_stat(info_to_plot_, n_clusters)
-    gc.collect()
-    
+        #plot_stat(info_to_plot_, n_clusters)
+        gc.collect()
+    else:
+        csv_dbscn,nc,sil,deb = dbscan_mf(csv_feat,metric,max_eps,min_min_clust,scale,scale_top)
+        print(sil)
+        print(deb)
  
     
     
