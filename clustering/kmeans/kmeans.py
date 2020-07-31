@@ -37,13 +37,18 @@ def multi_kmeans(csv_in, n_cluster, scale, top_scale):
         -n_cluster: 'k' number of clusters
         -scale: 1-> sdandard scaler, 2-> minmax scaler, other no scaler
     '''
-    df = pd.read_csv(csv_in, low_memory=False, index_col=['domain'])
+    df = pd.read_csv(csv_in, low_memory=False)
+    df = df.drop_duplicates(subset='domain')
+    df = df.set_index('domain')
 
     #remove 'score column' and tuple with no information from OI, and the column score and label
-    df = df.fillna(0)
-    df = df[(df['A_n_ipv4'] != 0) | (df['AAAA_n_ipv6'] != 0)]
-    df_copy = df.copy()
-    df_copy.reset_index(drop=True, inplace=True)
+    if 'PC1' not in list(df.columns):
+        df = df.fillna(0)
+        df = df[(df['A_n_ipv4'] != 0) | (df['AAAA_n_ipv6'] != 0)]
+    print(df)
+    if 'label' in list(df.columns):
+        df_copy = df.copy()
+        df_copy.reset_index(drop=True, inplace=True)
     #print('Copy: ')
     #print(df_copy)
     if 'score' in list(df.columns):
@@ -476,7 +481,7 @@ def main():
     loop = int(sys.argv[5])
     #top_scale: 1, during the scaling we also consider A/AAAA_top_country
     top_scale = int(sys.argv[6])
-    #save_fig: 1 we save fig 
+    #save_fig: 1 save fig 
     save_fig = int(sys.argv[7])
     good = []
     bad = []
