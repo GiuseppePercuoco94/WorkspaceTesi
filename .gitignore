@@ -30,3 +30,4 @@ clustering/kmeans/kmeans_*/
 clustering/pca/pca_*/
 clustering/pca/img/
 clustering/pca/dbscan_*/
+clustering/hdbscan/10*/
