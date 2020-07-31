@@ -4,6 +4,7 @@
 *.jpg
 *.epf
 *.json
+.*
 random_sampling/*.csv
 dataset_preparation/feature_extraction/boxplot_4_feat/
 dataset_preparation/feature_extraction/eda_multiplescatter/
@@ -24,6 +25,7 @@ clustering/anal_clusters/centroid/
 clustering/anal_clusters/investigate/
 clustering/anal_clusters/VT_*/
 clustering/dbscan/dbscan_*/
+clustering/dbscan/u1m_*/
 clustering/dbscan/img_loop_statdbscan/
 clustering/dbscan/knn/
 clustering/kmeans/kmeans_*/
@@ -31,3 +33,4 @@ clustering/pca/pca_*/
 clustering/pca/img/
 clustering/pca/dbscan_*/
 clustering/hdbscan/10*/
+
