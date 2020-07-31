@@ -11,19 +11,35 @@ def knn(csv_in, scale):
     
     
     #remove 'score column' and tuple with no information from OI, and the column score and label
-    df = df.drop(['score'], axis=1)
-    df = df.fillna(0)
-    df = df[(df['A_n_ipv4'] != 0) | (df['AAAA_n_ipv6'] != 0)]
+    #remove 'score column' and tuple with no information from OI, and the column score and label
+    if 'PC1' not in list(df.columns):
+        df = df.fillna(0)
+        df = df[(df['A_n_ipv4'] != 0) | (df['AAAA_n_ipv6'] != 0)]
+    print(df)
+    if 'label' in list(df.columns):
+        df_copy = df.copy()
+        df_copy.reset_index(drop=True, inplace=True)
+    #print('Copy: ')
+    #print(df_copy)
+    if 'score' in list(df.columns):
+        df = df.drop(['score'], axis=1)
+    else:
+        print('no score label')
+    if 'label' in list(df.columns):
+        df = df.drop(['label'], axis=1)
+    else:
+        print('no label')
     if scale == 1:
         print('Standard Scaler..')
         columns = list(df.columns)
         scaler = StandardScaler()
-        df[columns[0:-1]] = scaler.fit_transform(df[columns[0:-1]])
+        
+        df[columns[0:]] = scaler.fit_transform(df[columns[0:]])
     elif scale == 2:
         print('MIN MAX SCALER')
         columns = list(df.columns)
         scaler = MinMaxScaler()
-        df[columns[0:-1]] = scaler.fit_transform(df[columns[0:-1]])
+        df[columns[0:]] = scaler.fit_transform(df[columns[0:]])
         print(df)
     else:
         print('NO SCALE')
