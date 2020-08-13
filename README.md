@@ -66,12 +66,23 @@
 
 ## scripts_umbrella_investigate
 
-* *retrieve_score_investigate.py*:
-* *umbrella_investigate_poli_requests.py*:
+* *retrieve_score_investigate.py*: this is the script to scan a list of domain names and retrieve the relative 'risk_score' given by Umbrella. It accepts in input:
+
+    1. the Umbrella Investigate API token:
+    2. the csv of domain names to scan.
+
+* *umbrella_investigate_poli_requests.py*: this is the script to scan a list of domain names with Umbrella Investigate. It accepts in input:
+
+    1. the Umbrella Investigate API token;
+    2. the csv of domain names to scan.
+
 
 ## scripts_vt
 
-* *20kpolito_vt.py*
+* *20kpolito_vt.py* : this is the script to scan a list of domain names (2nd level domain) with VirusTotal and with a academic key. It accepts in input:
+
+    1. the VirusTotal API token;
+    2. the csv of domain names to scan.
 
 ## merge_csv
 
