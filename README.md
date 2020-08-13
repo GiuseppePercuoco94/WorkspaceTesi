@@ -35,7 +35,15 @@
     5. 'loop' is a integer flag to set to 1 to iterate the HDBSCAN algorithm from the minimun to the max value of 'min_cluster_size';
     6. 'top_scale' is a integer flag to set to '1' if we want consider the feature 'A/AAA_top_country' in the scaling phase, '0' if we don't want consider them in the scaling phase;
     7. 'save_fig' is a integer flag to set to '1' if we want save the pair plots, '0' if we don't want save them.
+
 ## PCA
-* *pca.py*
+* *pca.py*: this is the script to apply the PCA with a predefined number of principal components. It accepts:
+
+    1. the csv path fo the feature;
+    2. the number of pc;
+    3. the scaler to use ('1' for the StandardScaler,'2' for the MinMax Scaler, other value we apply the clustering without scaling data);
+    4. the name of csv file that we will obtain in output;
+    5. 'saving' set to 1 we wil obtain the csv with the components specified;
+    6. 'top_scale' is a integer flag to set to '1' if we want consider the feature 'A/AAA_top_country' in the scaling phase, '0' if we don't want consider them in the scaling phase;
 
 # Data Set Preparation Folder
