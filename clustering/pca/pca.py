@@ -34,7 +34,7 @@ def gen_pcx_string(n):
     return column_names_
 
 
-def pca(csv_feat, ncomponents, flag_scale, name,plot,save,top_scale):
+def pca(csv_feat, ncomponents, flag_scale, name,save,top_scale):
     df = pd.read_csv(csv_feat, low_memory=False, sep=',')
     df = df.drop_duplicates(subset='domain')
     df = df.set_index('domain')
@@ -131,6 +131,7 @@ def pca(csv_feat, ncomponents, flag_scale, name,plot,save,top_scale):
     print('Explained variance for n '+str(ncomponents)+' components: ')
     print(pca.explained_variance_ratio_)
     
+    '''
     if ncomponents == 2 and plot:
         plot_pca(pca_df)
     elif ncomponents == 3 and plot:
@@ -139,7 +140,7 @@ def pca(csv_feat, ncomponents, flag_scale, name,plot,save,top_scale):
         plot_bar_pca(pca,colname)
     else:
         print('FINISH')
-
+    '''
 def plot3d_3pc(pca_in):
     
     fig = plt.figure()
@@ -250,10 +251,10 @@ def main():
     #name of csv_out
     name = sys.argv[4]
 
-    plotting = int(sys.argv[5])
-    saving = int(sys.argv[6])
+    #plotting = int(sys.argv[5])
+    saving = int(sys.argv[5])
     #top_scale 1-> include A/AAAA in scaling, 0 not include in the scaling
-    top_scale = int(sys.argv[7])
+    top_scale = int(sys.argv[6])
     pca(csv_in,components,scale,name,plotting,saving,top_scale)
     
 
