@@ -46,4 +46,37 @@
     5. 'saving' set to 1 we wil obtain the csv with the components specified;
     6. 'top_scale' is a integer flag to set to '1' if we want consider the feature 'A/AAA_top_country' in the scaling phase, '0' if we don't want consider them in the scaling phase;
 
+## anal_clusters
+
+* *conc_vt_inv_score.py*:
+* *anal_cluster_vt_inv_riskscore.py*:
+* *category_for_cluster.py*:
+* *most_relevant_feat_sml.py*:
+* *var_influence.py*: 
+
 # Data Set Preparation Folder
+
+## scripts_avro
+
+* *starter.py*:
+* *avro_to_csv.py*:
+* *opint_csv.py*:
+* *polito_OI.py*:
+* *normalization_csvOI.py*:
+
+## scripts_umbrella_investigate
+
+* *retrieve_score_investigate.py*:
+* *umbrella_investigate_poli_requests.py*:
+
+## scripts_vt
+
+* *20kpolito_vt.py*
+
+## merge_csv
+
+* *merge_csv.py*
+
+## feature_extraction
+
+* *feature_extraction.py*
