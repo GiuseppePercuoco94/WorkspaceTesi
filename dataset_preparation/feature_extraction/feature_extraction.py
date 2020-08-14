@@ -7,6 +7,8 @@ import shutil
 import numpy as np 
 from collections import Counter
 import pycountry 
+import re
+import math
 
 def check_exists(path):
     if '/' not in path or '.' not in path.split('/')[-1]:
@@ -49,6 +51,7 @@ def id_country(cc_in):
 
 def top_country(list_country):
     dict_count = Counter(list_country)
+    #print(dict_count)
     k = list(dict_count.keys())
     max_value = 0
     max_cc = ''
@@ -64,7 +67,7 @@ def top_country(list_country):
     return id_cc
     
     
-def feature_extraction(json_info, csv_list_nomdom):
+def feature_extraction(json_info, csv_list_nomdom, name_out):
     #load dict form json 
     dict_info = json.load(open(json_info))
     #load domain and remove www, www2, wtc
@@ -86,9 +89,9 @@ def feature_extraction(json_info, csv_list_nomdom):
             header.append(x)
             print(x)
             
-    check_exists('feature_set_oi.csv')
+    check_exists(name_out+'_feature_set_oi.csv')
     
-    with open('feature_set_oi.csv', mode='a') as csv_feature:
+    with open(name_out+'_feature_set_oi.csv', mode='a') as csv_feature:
         writer = csv.writer(csv_feature)
         writer.writerow(header)
         for dom in doms:
@@ -96,6 +99,7 @@ def feature_extraction(json_info, csv_list_nomdom):
             data.append(dom)
             dom_dot = dom + '.'
             if dom_dot in dict_info.keys():
+                
                 #print(dom_dot)
                 for RRkey in RRkeys:
                     #print(RRkey)
@@ -118,7 +122,7 @@ def feature_extraction(json_info, csv_list_nomdom):
                                     info_ttl.append(s)
                                 if vect[5] != 'null' and vect[5] != '--' and vect[5] != '[--]':
                                     info_asn.append(vect[5])
-                                if vect[7] != 'null' and vect[7] != '--' and vect[7] != '[--]':
+                                if vect[7] != 'null' and vect[7] != '--' and vect[7] != '[--]' :
                                     info_coutr.append(vect[7])
                                 if string_to_number(vect[3]) != 0:
                                     s = string_to_number(vect[3])
@@ -142,7 +146,7 @@ def feature_extraction(json_info, csv_list_nomdom):
                                 
                             data.append(len(np.unique(info_asn)))
                             data.append(len(np.unique(info_coutr)))
-                            if len(info_coutr) != 0 and 'null' not in info_coutr:
+                            if len(info_coutr) != 0 and 'null' not in info_coutr and 'nan' not in info_coutr:
                                 data.append(top_country(info_coutr))
                             else:
                                 data.append('null')
@@ -195,18 +199,18 @@ def feature_extraction(json_info, csv_list_nomdom):
                     data.append(null)
                 writer.writerow(data)
              
-        feature_statistic_dmn(csv_list_nomdom)
+        feature_statistic_dmn(csv_list_nomdom,name_out)
                 
         
         
-def feature_statistic_dmn(domainname):
+def feature_statistic_dmn(domainname,name):
     print('Calculationg domain name statistics..')
     list_dmn = remove_www(domainname)
     count = 0
     
     header = ['domain','n_letters','n_digits','n_characters']
     
-    name_csv = 'feature_statistic_dmn.csv'
+    name_csv = name+'_feature_statistic_dmn.csv'
     check_exists(name_csv)
     with open(name_csv, mode='a') as csv_out:
         writer = csv.writer(csv_out)
@@ -239,45 +243,35 @@ def feature_statistic_dmn(domainname):
 
 def remove_www(path):
     dom_ = []
+    count_null = 0
+    re_www = re.compile(r'www.')
+    re_wwwn= re.compile(r"www\w+.")
     with open(path) as csv_in:
         lines = csv_in.readlines()
         for line in lines:
             if '\n' in line:
                 line = line.strip('\n')
-                if 'www8.' in line:
-                    line = line.replace('www8.','')
-                    dom_.append(line)
-                elif 'www3.' in line:
-                    line = line.replace('www3.','')
-                    dom_.append(line)
-                elif 'www4.' in line:
-                    line = line.replace('www4.','')
-                    dom_.append(line)
-                elif 'www2.' in line:
-                    line = line.replace('www2.','')
-                    dom_.append(line)
-                elif 'www.' in line:
-                    line = line.replace('www.','')
-                    dom_.append(line)
+                if len(line) == 0:
+                    count_null += 1
+                    continue
+                elif re.match(re_wwwn,line):
+                    line = re_wwwn.sub('',line)
+                elif re.match(re_www,line):
+                    line = re_www.sub('',line)
                 else:
-                    dom_.append(line)
+                    print('[debug]probably no new case ')
+                dom_.append(line)
             else:
-                if 'www8.' in line:
-                    line = line.replace('www8.','')
-                    dom_.append(line)
-                elif 'www3.' in line:
-                    line = line.replace('www3.','')
-                elif 'www4.' in line:
-                    line = line.replace('www4.','')
-                    dom_.append(line)
-                elif 'www2.' in line:
-                    line = line.replace('www2.','')
-                    dom_.append(line)
-                elif 'www.' in line:
-                    line = line.replace('www.','')
-                    dom_.append(line)
+                if len(line) == 0:
+                    count_null += 1
+                    continue
+                elif re.match(re_wwwn,line):
+                    line = re_wwwn.sub('',line)
+                elif re.match(re_www,line):
+                    line = re_www.sub('',line)
                 else:
-                    dom_.append(line)
+                    print('[debug]probably no new case ')
+                dom_.append(line)
         return dom_
 
 
@@ -287,4 +281,5 @@ def main(pj,list):
 if __name__ == '__main__':
     path_json = sys.argv[1]
     list_dn = sys.argv[2]
-    feature_extraction(path_json,list_dn)
+    name_out = sys.argv[3]
+    feature_extraction(path_json,list_dn,name_out)
