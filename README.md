@@ -146,4 +146,8 @@ Moreover this script extraxt a json file where put the information for domain. F
 
 ## feature_extraction
 
-* *feature_extraction.py*
+* *feature_extraction.py*: this script has the task to convert the infromation in json file obtained from *normalization.py* script in a csv file that will be the our feature set. Moreover the script create the columns 'n_digits','n_characters' and 'n_letter'. It accepts in input:
+
+    1. the path of json file;
+    2. the csv contain the list of domain names. 
+    3. the name of file out.
