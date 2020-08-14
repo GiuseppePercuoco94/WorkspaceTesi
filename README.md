@@ -48,7 +48,14 @@
 
 ## anal_clusters
 
-* *conc_vt_inv_score.py*:
+* *conc_vt_inv_score.py*: this is the script to concatenate the given csv by scanning with VirusTotal and UmbrellaInvestigate and the given csv by scanning with Investigate to derive the 'risk_score', moreover this script makes the labeling step. There is a flag (first argument to pass) 'choose' to choose the different function:
+
+    1. 'choose' == 1: you have to pass the 'path of csv resulting from scanning with VT' and 'path of csv resulting from scanning with Investigate to retrieve the risk_score'; the script make a concatenation of this two csv on the common column 'domain';
+    2. 'choose' == 2: you have to pass the 'path of csv resulting from scanning with Investigate' and 'path of csv resulting from scanning with Investigate to retrieve the risk_score'; the script make a concatenation of this two csv on the common column 'domain';
+    3. 'choose' == 3: you have to pass the 'path of csv resulting from scanning with VT','path of csv resulting from scanning with Investigate' and 'path of csv resulting from scanning with Investigate to retrieve the risk_score'; the script make a concatenation of this two csv on the common column 'domain';
+    4. 'choose' == 4: you have to pass the path of the csv obtained by setting 'choose'=1 and a 'limit' value that represent the lowest value of 'positives' (field retrieved by scanning with VT thaw it tells us the number of scanner which  marks as 'bad' a domain name) to consider a domain name as malicious domain name; in this phase we obtained a csv with a 'domain' column and a 'label' column;
+    5. 'choose' == 5: you have to pass the path of the csv obtained by setting 'choose'=2; in this phase we obtained a csv with a 'domain' column and a 'label' column.
+
 * *anal_cluster_vt_inv_riskscore.py*:
 * *category_for_cluster.py*:
 * *most_relevant_feat_sml.py*:
@@ -86,7 +93,10 @@
 
 ## merge_csv
 
-* *merge_csv.py*
+* *merge_csv.py*: this script join on the common column 'domain' the csv obtained from the scanned process with VT and Investigate. It accepts in input:
+
+    1. a folder that contains the csv to merge;
+    2. the name to give to the csv in output.
 
 ## feature_extraction
 
