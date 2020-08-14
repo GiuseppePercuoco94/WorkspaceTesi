@@ -96,7 +96,7 @@ The *starter.py* calls the following scripts in this order:
 * *avro_to_csv.py*: this script has the task to download the zip file (for a specific day and for a specific type) from OpenIntel, unzip it and convert the avro file in csv file;
 * *opint_csv.py*: this scrit has the task to retrive the list of domain names queried by OpenIntel and retrieve the intersection between the queried domain and the list of domain names passed;
 * *polito_OI.py*: this script has the task to extract the tuple from OpenIntel only fer the domains present in the intersection. 
-* *normalization_csvOI.py*: this script has the task to convert the information from the 'tuple' format in a csv in a compact format. For example suppose we have this two tuple:
+* *normalization_csvOI.py*: this script has the task to convert the information from the 'tuple' format in a csv in a compact format. A basic example, suppose we have this two tuple:
 
 
         query_name        response_name   query_type    ipv4      ttl    rtt
@@ -108,7 +108,13 @@ After the normalization we have:
         domain          A_ipv4_0     A_ttl_0    A_rtt_0   A_ipv4_1    A_ttl_1  A_rtt_1
         domainA.com     1.0.0.1       0.1        20       1.0.0.2      0.3       13
         
+Moreover this script extraxt a json file where put the information for domain. For example:
 
+            'domainA.com':{
+                'ipv4':[1.0.0.1,1.0.0.2],
+                'ttl':[0.1,0.3],
+                'rtt':[20,30]
+            }
 
 
 ## scripts_umbrella_investigate
