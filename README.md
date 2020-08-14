@@ -77,11 +77,39 @@
 
 ## scripts_avro
 
-* *starter.py*:
-* *avro_to_csv.py*:
-* *opint_csv.py*:
-* *polito_OI.py*:
-* *normalization_csvOI.py*:
+* *starter.py*: this is the entry point to download the avro file from OpenIntel repository, retrieve information for the list of domain name passed. It accepts:
+
+    1. 'start_date': starting date -> format 'XXXXYYZZ' -> XXXX=year, YY=month,ZZ=day
+    2. 'end_date': end date -> format 'XXXXYYZZ' -> XXXX=year, YY=month,ZZ=day (For this basic usage start date must be equal to start date to download a zip file for one day);
+    3. type_data (str): 'umbrella1m', 'open-tld','alexa1m'
+    (For example: if you want download tar of alexa1m from 01-01-2020 to 03-01-2020, you have to write:
+        - start_date as '20200101'
+        - end_date as '20200103'
+        - type_data as 'alexa1m'
+    )
+    4. the path of csv that contain a list of domain names which we want retrieve infomation;
+    5. a name folder where put the list of the name that are common and not beetwen the list passed and the domain names queried by OI for a specific day;
+    6. 'json_set' a int flag, set '1' to save the infomation retrieved by OI in a json file. 
+
+The *starter.py* calls the following scripts in this order:
+
+* *avro_to_csv.py*: this script has the task to download the zip file (for a specific day and for a specific type) from OpenIntel, unzip it and convert the avro file in csv file;
+* *opint_csv.py*: this scrit has the task to retrive the list of domain names queried by OpenIntel and retrieve the intersection between the queried domain and the list of domain names passed;
+* *polito_OI.py*: this script has the task to extract the tuple from OpenIntel only fer the domains present in the intersection. 
+* *normalization_csvOI.py*: this script has the task to convert the information from the 'tuple' format in a csv in a compact format. For example suppose we have this two tuple:
+
+
+        query_name        response_name   query_type    ipv4      ttl    rtt
+        domainA.com       domainA.com          A        1.0.0.1   0.1     20
+        domainA.com       domainA.com          A        1.0.0.2   0.3     13
+
+After the normalization we have:
+
+        domain          A_ipv4_0     A_ttl_0    A_rtt_0   A_ipv4_1    A_ttl_1  A_rtt_1
+        domainA.com     1.0.0.1       0.1        20       1.0.0.2      0.3       13
+        
+
+
 
 ## scripts_umbrella_investigate
 
