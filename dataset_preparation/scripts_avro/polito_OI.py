@@ -6,6 +6,7 @@ import gc
 from datetime import datetime
 import os
 import sys
+import re
 '''
 #path_prova = '/Volumes/SDPEPPE/polito_py/csv_oi/6_01_20_0.csv'
 #path_csv_out = '/Volumes/SDPEPPE/polito_py/csv_prova.csv'
@@ -57,43 +58,35 @@ def sparse_info_from_polito(inter1_list_name, folder_csv):
     print(len(domains))
     '''
     #extract domain from the list passed
+    count_null = 0
+    re_www = re.compile(r'www.')
+    re_wwwn= re.compile(r"www\w+.")
     with open(path_inter1) as csv_dom:
         lines = csv_dom.readlines()
         for line in lines:
             if '\n' in line:
                 line = line.strip('\n')
-                if 'www8.' in line:
-                    line = line.replace('www8.','')
-                    domains.append(line)
-                elif 'www3.' in line:
-                    line = line.replace('www3.','')
-                    domains.append(line)
-                elif 'www2.' in line:
-                    line = line.replace('www2.','')
-                    domains.append(line)
-                elif 'www.' in line:
-                    line = line.replace('www.','')
-                    domains.append(line)
+                if len(line) == 0:
+                    count_null += 1
+                    continue
+                elif re.match(re_wwwn,line):
+                    line = re_wwwn.sub('',line)
+                elif re.match(re_www,line):
+                    line = re_www.sub('',line)
                 else:
-                    #print('new case: ' + str(line))
-                    domains.append(line)
+                    print('[debug]probably no new case ')
+                domains.append(line)
             else:
-                if 'www8.' in line:
-                    line = line.replace('www8.','')
-                    domains.append(line)
-                elif 'www3.' in line:
-                    line = line.replace('www3.','')
-                    domains.append(line)
-                elif 'www2.' in line:
-                    line = line.replace('www2.','')
-                    domains.append(line)
-                elif 'www.' in line:
-                    line = line.replace('www.','')
-                    domains.append(line)
+                if len(line) == 0:
+                    count_null += 1
+                    continue
+                elif re.match(re_wwwn,line):
+                    line = re_wwwn.sub('',line)
+                elif re.match(re_www,line):
+                    line = re_www.sub('',line)
                 else:
-                    #print('new case: ' + str(line))
-                    domains.append(line)
-
+                    print('[debug]probably no new case ')
+                domains.append(line)
     column = ['query_type', 'query_name', 'response_type', 'response_name', 'response_ttl', 'timestamp',
             'rtt', 'worker_id', 'status_code', 'ip4_address', 'ip6_address', 'country', 'as', 'as_full',
             'ip_prefix', 'cname_name', 'dname_name', 'mx_address', 'mx_preference', 'mxset_hash_algorithm'
@@ -217,48 +210,35 @@ def sparse_info_from_polito2(inter1_list_name, folder_csv):
     print(len(domains))
     '''
     #extract domain from the list passed
+    count_null = 0
+    re_www = re.compile(r'www.')
+    re_wwwn= re.compile(r"www\w+.")
     with open(path_inter1) as csv_dom:
         lines = csv_dom.readlines()
         for line in lines:
             if '\n' in line:
                 line = line.strip('\n')
-                if 'www8.' in line:
-                    line = line.replace('www8.','')
-                    domains.append(line)
-                elif 'www4.' in line:
-                    line = line.replace('www4.','')
-                    domains.append(line)
-                elif 'www3.' in line:
-                    line = line.replace('www3.','')
-                    domains.append(line)
-                elif 'www2.' in line:
-                    line = line.replace('www2.','')
-                    domains.append(line)
-                elif 'www.' in line:
-                    line = line.replace('www.','')
-                    domains.append(line)
+                if len(line) == 0:
+                    count_null += 1
+                    continue
+                elif re.match(re_wwwn,line):
+                    line = re_wwwn.sub('',line)
+                elif re.match(re_www,line):
+                    line = re_www.sub('',line)
                 else:
-                    #print('new case: ' + str(line))
-                    domains.append(line)
+                    print('[debug]probably no new case ')
+                domains.append(line)
             else:
-                if 'www8.' in line:
-                    line = line.replace('www8.','')
-                    domains.append(line)
-                elif 'www4.' in line:
-                    line = line.replace('www4.','')
-                    domains.append(line)
-                elif 'www3.' in line:
-                    line = line.replace('www3.','')
-                    domains.append(line)
-                elif 'www2.' in line:
-                    line = line.replace('www2.','')
-                    domains.append(line)
-                elif 'www.' in line:
-                    line = line.replace('www.','')
-                    domains.append(line)
+                if len(line) == 0:
+                    count_null += 1
+                    continue
+                elif re.match(re_wwwn,line):
+                    line = re_wwwn.sub('',line)
+                elif re.match(re_www,line):
+                    line = re_www.sub('',line)
                 else:
-                    #print('new case: ' + str(line))
-                    domains.append(line)
+                    print('[debug]probably no new case ')
+                domains.append(line)
 
     column = ['query_type', 'query_name', 'response_type', 'response_name', 'response_ttl', 'timestamp',
             'rtt', 'worker_id', 'status_code', 'ip4_address', 'ip6_address', 'country', 'as', 'as_full',
