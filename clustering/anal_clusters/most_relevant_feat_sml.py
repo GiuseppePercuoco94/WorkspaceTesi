@@ -21,10 +21,13 @@ def most_relevant_feat_rfc(csv_in):
     df_c = df.copy()
     
     val_to_predict = np.array(df['cluster'])
-    labels = list(df['label'].values)
+    #remove the 'cluster' and 'label' columnsd
+    if 'label' in list(df.columns):
+        labels = list(df['label'].values)
+        df = df.drop(['label'], axis=1)
     print(val_to_predict)
-    #remove the 'cluster' and 'label' columns
-    df = df.drop(['cluster','label'],axis=1)
+    if 'cluster' in list(df.columns):
+        df = df.drop(['cluster'],axis=1)
     print(df)
     #print(labels)
     
