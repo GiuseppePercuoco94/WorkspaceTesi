@@ -56,7 +56,12 @@
     4. 'choose' == 4: you have to pass the path of the csv obtained by setting 'choose'=1 and a 'limit' value that represent the lowest value of 'positives' (field retrieved by scanning with VT thaw it tells us the number of scanner which  marks as 'bad' a domain name) to consider a domain name as malicious domain name; in this phase we obtained a csv with a 'domain' column and a 'label' column;
     5. 'choose' == 5: you have to pass the path of the csv obtained by setting 'choose'=2; in this phase we obtained a csv with a 'domain' column and a 'label' column.
 
-* *anal_cluster_vt_inv_riskscore.py*: 
+* *anal_cluster_vt_inv_riskscore.py*: this script is useful to retrieve information about clustering process (graph of perfomance, SIL DB SSE) and information about labeling process (how clusters are formed and by which domains). It accepts:
+
+    1. the path of the folder that contains the csv obtained after the clustering process;
+    2. the csv that contain the label per domain names (obtained from conc_vt_inv_score.py with 'choose' 4/5);
+    3. a integer value that serve to set up the x axis of the images ('1' the axis x represent the value of 'k' for the KMEANS algorithm, '2' the axis x represent the 'min_c_size' value for the HDBSCAN algorithm, other value for the DBSCAN algoritm).
+
 * *category_for_cluster.py*: this script serves to retrieve the cluster category from 'content_categories'. It accepts:
     
     1. The csv retrieved from cluster process (the csv formed by the feature column and the 'cluster' column);
@@ -65,7 +70,7 @@
 * *most_relevant_feat_sml.py*: this script exploit a RandomForest Classifier to retrieve the most relevant feature to the clustering process. It accepts:
 
     1. the path of csv obtained from the clustering process (so it must have the 'cluster' column) and for which we want know the most relevant feature which have influenced the clustering process.
-    
+
 * *var_influence.py*: 
 
 # Data Set Preparation Folder
