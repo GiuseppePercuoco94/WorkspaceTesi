@@ -13,6 +13,23 @@
     5. 'loop' is a integer flag to set to 1 to iterate the Kmenas algorithm from the minimun to the max value of 'n_cluster';
     6. 'top_scale' is a integer flag to set to '1' if we want consider the feature 'A/AAA_top_country' in the scaling phase, '0' if we don't want consider them in the scaling phase;
     7. 'save_fig' is a integer flag to set to '1' if we want save the pair plots, '0' if we don't want save them.
+
+In output, if we set 'save_fig' to 0 we will have these folders:
+
+* *csv_kmeans*: contain csv files for each k in the cluster process;
+* *csv_not_sorted_by_cluster*: contain csv files in which the domains are sorted by cluster id value;
+* *img_sse_avgsil_db*: contain the image that represents the trend curves of SSEs, mean value of Silhouette Scores and Davies-Bloudin indices as the value of k varies.
+* *list_score*: contain a three different '.txt' files, each one contain the value of respectly SSE, mean value of Silhouette Scores and Davies-Bloudin indices.
+
+Otherwise, if we set 'save_fig' to 1 we will have these folders:
+
+* We obtain K folders named as 'Cluster_X' (where X is the k value); each folder contains the respective pair plot, the scatter with features two by two and the sil plot. 
+* *csv_kmeans*: contain csv files for each k in the cluster process;
+* *csv_not_sorted_by_cluster*: contain csv files in which the domains are sorted by cluster id value;
+* *img_sse_avgsil_db*: contain the image that represents the trend curves of SSEs, mean value of Silhouette Scores and Davies-Bloudin indices as the value of k varies.
+* *list_score*: contain a three different '.txt' files, each one contain the value of respectly SSE, mean value of Silhouette Scores and Davies-Bloudin indices.
+
+
 ## DBSCAN
 * *dbscan.py*: this is the script to get the clustering results through the DBSCAN algorithm. It accepts such arguments as input:
 
