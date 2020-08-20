@@ -493,13 +493,13 @@ def main():
         db_index_ = []
         start = datetime.now()
         for i in r:
-            data_ = []
+            #data_ = []
             df_,sse,sil,deb = multi_kmeans(path_csv,i,scale,top_scale)
             if save_fig == 1:
-                data_ = analyse_clusters(i)
-                good.append(data_[0])
-                bad.append(data_[1])
-                mixed.append(data_[2])
+                #data_ = analyse_clusters(i)
+                #good.append(data_[0])
+                #bad.append(data_[1])
+                #mixed.append(data_[2])
                 comb_pair_2feat(df_,loop)
                 plt.close('all')
                 pair_plot_multi_kmeans(df_,loop)
