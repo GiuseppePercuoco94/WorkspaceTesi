@@ -88,6 +88,8 @@
     5. 'saving' set to 1 we wil obtain the csv with the components specified;
     6. 'top_scale' is a integer flag to set to '1' if we want consider the feature 'A/AAA_top_country' in the scaling phase, '0' if we don't want consider them in the scaling phase;
 
+    In output, with 'saving' set to 1, we will obtain a folder named 'pca_csv' in which we will found the csv with the principal component pre-selected. 
+
 ## anal_clusters
 
 * *conc_vt_inv_score.py*: this is the script to concatenate the given csv by scanning with VirusTotal and UmbrellaInvestigate and the given csv by scanning with Investigate to derive the 'risk_score', moreover this script makes the labeling step. There is a flag (first argument to pass) 'choose' to choose the different function:
