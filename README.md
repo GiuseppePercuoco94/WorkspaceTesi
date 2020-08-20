@@ -14,20 +14,20 @@
     6. 'top_scale' is a integer flag to set to '1' if we want consider the feature 'A/AAA_top_country' in the scaling phase, '0' if we don't want consider them in the scaling phase;
     7. 'save_fig' is a integer flag to set to '1' if we want save the pair plots, '0' if we don't want save them.
 
-In output, if we set 'save_fig' to 0 we will have these folders:
+    In output, if we set 'save_fig' to 0 we will have these folders:
 
-* *csv_kmeans*: contain csv files for each k in the cluster process;
-* *csv_not_sorted_by_cluster*: contain csv files in which the domains are sorted by cluster id value;
-* *img_sse_avgsil_db*: contain the image that represents the trend curves of SSEs, mean value of Silhouette Scores and Davies-Bloudin indices as the value of k varies.
-* *list_score*: contain a three different '.txt' files, each one contain the value of respectly SSE, mean value of Silhouette Scores and Davies-Bloudin indices.
+    * *csv_kmeans*: contain csv files for each k in the cluster process, in these file there is an order in according to the cluster id;
+    * *csv_not_sorted_by_cluster*: contain csv files in which the domains are not sorted by cluster id value;
+    * *img_sse_avgsil_db*: contain the image that represents the trend curves of SSEs, mean value of Silhouette Scores and Davies-Bloudin indices as the value of k varies.
+    * *list_score*: contain a three different '.txt' files, each one contain the value of respectly SSE, mean value of Silhouette Scores and Davies-Bloudin indices.
 
-Otherwise, if we set 'save_fig' to 1 we will have these folders:
+    Otherwise, if we set 'save_fig' to 1 we will have these folders:
 
-* We obtain K folders named as 'Cluster_X' (where X is the k value); each folder contains the respective pair plot, the scatter with features two by two and the sil plot. 
-* *csv_kmeans*: contain csv files for each k in the cluster process;
-* *csv_not_sorted_by_cluster*: contain csv files in which the domains are sorted by cluster id value;
-* *img_sse_avgsil_db*: contain the image that represents the trend curves of SSEs, mean value of Silhouette Scores and Davies-Bloudin indices as the value of k varies.
-* *list_score*: contain a three different '.txt' files, each one contain the value of respectly SSE, mean value of Silhouette Scores and Davies-Bloudin indices.
+    * We obtain K folders named as 'Cluster_X' (where X is the k value); each folder contains the respective pair plot, the scatter with features two by two and the sil plot. 
+    * *csv_kmeans*: contain csv files for each k in the cluster process, in these file there is an order in according to the cluster id;
+    * *csv_not_sorted_by_cluster*: contain csv files in which the domains are not sorted by cluster id value;
+    * *img_sse_avgsil_db*: contain the image that represents the trend curves of SSEs, mean value of Silhouette Scores and Davies-Bloudin indices as the value of k varies.
+    * *list_score*: contain a three different '.txt' files, each one contain the value of respectly SSE, mean value of Silhouette Scores and Davies-Bloudin indices.
 
 
 ## DBSCAN
@@ -40,7 +40,23 @@ Otherwise, if we set 'save_fig' to 1 we will have these folders:
     5. the maximum number of 'min_samples' (The number of samples (or total weight) in a neighborhood for a point to be considered as a core point. This includes the point itself);
     6. the scaler to use ('1' for the StandardScaler,'2' for the MinMax Scaler, other value we apply the clustering without scaling data);
     7. 'top_scale' is a integer flag to set to '1' if we want consider the feature 'A/AAA_top_country' in the scaling phase, '0' if we don't want consider them in the scaling phase;
-    8. 'loop' is a integer flag to set to 1 to iterate the DBSCAN algorithm from the minimun to the max value of 'eps' and ' min_samples'.
+    8. 'save_fig' is a integer flag to set to '1' if we want save the scatter with feature two by two, '0' if we don't want save them.
+    9. 'loop' is a integer flag to set to 1 to iterate the DBSCAN algorithm from the minimun to the max value of 'eps' and ' min_samples'.
+
+    In output, if we set 'save_fig' to 0 we will have these folders:
+
+    * *csv_dbscan_not_sorted_by_cluster*: contain csv files in which the domains are not sorted by cluster id value;
+    * *lists_score: contain a three different '.txt' files, each one contain the  mean value of Silhouette Scores and Davies-Bloudin indices.
+    * *Stat_sil_db_mdbscan: contain the image that represents the trend curves of mean value of Silhouette Scores and Davies-Bloudin indices as the value of 'eps' varies, fixed 'min_cluster' value.
+
+    In output, if we set 'save_fig' to 1 we will have these folders:
+
+    * Folders named as 'Cluster_X_Y', where X is the 'min_cluster' value and Y is the 'eps' value.
+    * *csv_dbscan_not_sorted_by_cluster*: contain csv files in which the domains are not sorted by cluster id value;
+    * *lists_score: contain a three different '.txt' files, each one contain the  mean value of Silhouette Scores and Davies-Bloudin indices.
+    * *Stat_sil_db_mdbscan: contain the image that represents the trend curves of mean value of Silhouette Scores and Davies-Bloudin indices as the value of 'eps' varies, fixed 'min_cluster' value.
+
+
 
 ##  HDBSCAN
 * *c_hdbscan.py*: this is the script to get the clustering results through the HDBSCAN algorithm.  It accepts such arguments as input:
@@ -52,6 +68,15 @@ Otherwise, if we set 'save_fig' to 1 we will have these folders:
     5. 'loop' is a integer flag to set to 1 to iterate the HDBSCAN algorithm from the minimun to the max value of 'min_cluster_size';
     6. 'top_scale' is a integer flag to set to '1' if we want consider the feature 'A/AAA_top_country' in the scaling phase, '0' if we don't want consider them in the scaling phase;
     7. 'save_fig' is a integer flag to set to '1' if we want save the pair plots, '0' if we don't want save them.
+
+    In output, if we set 'save_fig' to 0 we will have these folders:
+
+    * *csv_hdbscan*: contain csv files for each 'min_cluster_size' in the cluster process, in these file there is an order in according to the cluster id;
+    * *csv_hdbscan_not_sorted_by_cluster*: contain csv files in which the domains are not sorted by cluster id value;
+    * *img_sse_avgsil_db*: contain the image that represents the trend curves of SSEs, mean value of Silhouette Scores and Davies-Bloudin indices as the value of k varies.
+    * *list_score*: contain a three different '.txt' files, each one contain the value of respectly SSE, mean value of Silhouette Scores and Davies-Bloudin indices.
+
+    The case with 'save_fig' set to 1 is not implemented.
 
 ## PCA
 * *pca.py*: this is the script to apply the PCA with a predefined number of principal components. It accepts:
