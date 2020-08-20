@@ -168,6 +168,11 @@ Moreover this script extraxt a json file where put the information for domain. F
     1. the Umbrella Investigate API token:
     2. the csv of domain names to scan.
 
+    In output we will obtain the following folders and files:
+
+    * 'error_umb' contains the .txt file with the log of errors (just in case they were);
+    * 'scanned' contain the csv with the data extracted form scanning.
+
 * *umbrella_investigate_poli_requests.py*: this is the script to scan a list of domain names with Umbrella Investigate. It accepts in input:
 
     1. the Umbrella Investigate API token;
@@ -177,7 +182,7 @@ Moreover this script extraxt a json file where put the information for domain. F
 
     * 'error_umb' contains the .txt file with the log of errors (just in case they were);
     * 'scanned' contain the csv with the data extracted form scanning.
-    
+
 ## scripts_vt
 
 * *20kpolito_vt.py* : this is the script to scan a list of domain names (2nd level domain) with VirusTotal and with a academic key. It accepts in input:
